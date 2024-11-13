@@ -4,6 +4,8 @@ from discord import app_commands
 from discord.ext import commands
 from random import randint
 from dotenv import load_dotenv
+from keep_alive import keep_alive
+keep_alive()
 
 load_dotenv()
 API_KEY = os.getenv("API_KEY")
