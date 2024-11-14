@@ -1,10 +1,13 @@
 import os
+import time
 import discord 
 from discord import app_commands
 from discord.ext import commands
 from random import randint
 from dotenv import load_dotenv
 from keep_alive import keep_alive
+import datetime
+
 keep_alive()
 
 load_dotenv()
@@ -18,6 +21,8 @@ async def on_ready():
     print(f'Logged in as {bot.user.name} ({bot.user.id})')
     print("Ready to do some tomfoolery")
     print('------')
+    global dateInit
+    dateInit = datetime.datetime.now()
     #! sync commands with bot, only uncomment when you add a new command and then comment again
     # try:
     #     synced = await bot.tree.sync()
@@ -86,6 +91,12 @@ async def guessing_game(interaction: discord.Interaction, difficulty: discord.ap
         if attempts != 0:
             await interaction.channel.send(f"{attempts} attempts left")
 
+
+@bot.tree.command(name="uptime", description="See how long the bot has been running for.")
+async def get_uptime(interaction: discord.Interaction):
+    epoch =round(dateInit.timestamp())
+    
+    await interaction.response.send_message(f"I've been running since <t:{epoch}:R>")
 #TODO Command for adding images
 
 def files_in_folder(folder_path): # Gives the number of files in a folder, and a list with all the files
