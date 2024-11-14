@@ -69,27 +69,29 @@ async def guessing_game(interaction: discord.Interaction, difficulty: discord.ap
     await interaction.response.send_message(f"Im thinking of a number between 1 and {guessTop}")
     while True:
         if attempts < 1:
-            await interaction.channel.send(f"That wasnt it, you suck bro @everyone laugh at them\nThe number was {number}")
+            await interaction.channel.send(f"That wasnt it, you suck bro @everyone laugh at <@{interaction.user.id}>\nThe number was {number}")
             break
         msg = await bot.wait_for('message', check=check)
         try:
             guess = int(msg.content)
         except:
-            await interaction.channel.send("Thats not a number lil bro")
             attempts-=1
-            await interaction.channel.send(f"{attempts} attempts left")
+            if attempts != 0:
+                await msg.reply(f"Thats not a number lil bro\n{attempts} attempts left")
             continue
         if guess == number:
-            await interaction.channel.send("Thats the number!")
+            await msg.reply("Thats the number!")
             break
         elif guess > number:
             attempts-=1
-            await interaction.channel.send(f"Too high!")
-        else:
+            if attempts != 0:
+                await msg.reply(f"Too high!\n{attempts} attempts left")
+            continue
+        elif guess < number:
             attempts-=1
-            await interaction.channel.send(f"Too low!")  
-        if attempts != 0:
-            await interaction.channel.send(f"{attempts} attempts left")
+            if attempts != 0:
+                await msg.reply(f"Too low!\n{attempts} attempts left")  
+            continue
 
 
 @bot.tree.command(name="uptime", description="See how long the bot has been running for.")
